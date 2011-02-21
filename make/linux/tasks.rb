@@ -19,7 +19,6 @@ class MakeLinux
       cp    "#{::EXT_RUBY}/lib/lib#{::RUBY_SO}.so", "dist/lib#{::RUBY_SO}.so"
       ln_s  "lib#{::RUBY_SO}.so", "dist/lib#{::RUBY_SO}.so.#{::RUBY_V[/^\d+\.\d+/]}"
       cp    "/usr/lib/libgif.so", "dist/libgif.so.4"
-      ln_s  "libgif.so.4", "dist/libungif.so.4"
       cp    "/usr/lib/libjpeg.so", "dist/libjpeg.so.8"
       cp    "/usr/lib/libcurl.so", "dist/libcurl.so.4"
       cp    "/usr/lib/libportaudio.so", "dist/libportaudio.so.2"

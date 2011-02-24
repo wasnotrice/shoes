@@ -10,21 +10,24 @@ class MakeMinGW
     # out of the windows command shell if we are compiling from there.
     def sh(*args)
       cmd = args.join(' ')
-      super "bash.exe --login -i -c \"#{cmd}\""
+      super "bash.exe --login -i -c \"cd #{File.expand_path(File.join(__FILE__, "..", "..", ".."))};#{cmd}\""
     end
 
     def copy_ext xdir, libdir
-      Dir.chdir(xdir) do
-        sh 'ruby extconf.rb; make'
-      end
+      sh "cd #{xdir};ruby extconf.rb; make"
       copy_files "#{xdir}/*.so", libdir
     end
 
     def copy_deps_to_dist
-      dlls = [RUBY_SO]
+      dlls = []
       dlls += IO.readlines("make/mingw/dlls").map{|dll| dll.chomp}
       dlls += %w{libvlc} if ENV['VIDEO']
-      dlls.each{|dll| cp "#{EXT_RUBY}/bin/#{dll}.dll", "dist/"}
+      dlls.each{|dll| cp "../mingw/bin/#{dll}.dll", "dist/"}
+
+      cp "../ruby19_mingw/bin/zlib1.dll", "dist/"
+      cp "../ruby19_mingw/bin/libiconv2.dll", "dist/"
+      cp "../ruby19_mingw/bin/libeay32-0.9.8-msvcrt.dll", "dist/"
+      cp "../ruby19_mingw/bin/#{RUBY_SO}.dll", "dist/"
       cp "dist/zlib1.dll", "dist/zlib.dll"
       Dir.glob("../deps_cairo*/*"){|file| cp file, "dist/"}
       sh "strip -x dist/*.dll" unless ENV['DEBUG']

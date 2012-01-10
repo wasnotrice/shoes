@@ -136,68 +136,13 @@ class Shoes
         f << "APPL????"
       end
       File.open(File.join(app_dir, "Contents", "Info.plist"), 'w') do |f|
-        f << <<END
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-<key>CFBundleGetInfoString</key>
-<string>#{app_name} #{vers.join(".")}</string>
-<key>CFBundleExecutable</key>
-<string>#{name}-launch</string>
-<key>CFBundleIdentifier</key>
-<string>org.hackety.#{name}</string>
-<key>CFBundleName</key>
-<string>#{app_name}</string>
-<key>CFBundleIconFile</key>
-<string>Shoes.icns</string>
-<key>CFBundleShortVersionString</key>
-<string>#{vers.join(".")}</string>
-<key>CFBundleInfoDictionaryVersion</key>
-<string>6.0</string>
-<key>CFBundlePackageType</key>
-<string>APPL</string>
-<key>IFMajorVersion</key>
-<integer>#{vers[0]}</integer>
-<key>IFMinorVersion</key>
-<integer>#{vers[1]}</integer>
-</dict>
-</plist>
-END
+        f << info_plist(app_name, vers, name)
       end
       File.open(File.join(app_dir, "Contents", "version.plist"), 'w') do |f|
-        f << <<END
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-<key>BuildVersion</key>
-<string>1</string>
-<key>CFBundleVersion</key>
-<string>#{vers.join(".")}</string>
-<key>ProjectName</key>
-<string>#{app_name}</string>
-<key>SourceVersion</key>
-<string>#{Time.now.strftime("%Y%m%d")}</string>
-</dict>
-</plist>
-END
+        f << version_plist(app_name, vers)
       end
       File.open(File.join(mac_dir, "#{name}-launch"), 'w') do |f|
-        f << <<END
-#!/bin/bash
-SHOESPATH=/Applications/Shoes.app/Contents/MacOS
-APPPATH="${0%/*}"
-unset DYLD_LIBRARY_PATH
-cd "$APPPATH"
-echo "[Pango]" > /tmp/pangorc
-echo "ModuleFiles=$SHOESPATH/pango.modules" >> /tmp/pangorc
-if [ ! -d /Applications/Shoes.app ]
-  then ./cocoa-install
-    fi
-    open -a /Applications/Shoes.app "#{File.basename(script)}"
-    # DYLD_LIBRARY_PATH=$SHOESPATH PANGO_RC_FILE="$APPPATH/pangorc" $SHOESPATH/shoes-bin "#{File.basename(script)}"
-END
+        f << launch_script(script)
       end
       FileUtils.cp(script, File.join(mac_dir, File.basename(script)))
       FileUtils.cp(File.join(DIR, "static", "stubs", "cocoa-install"),
@@ -265,6 +210,75 @@ END
       FileUtils.rm_rf(tgz_path)
       FileUtils.rm_rf(tmp_dir)
       blk[1.0] if blk
+    end
+
+    # Templates for OS X files
+    # for version 1.0, pass vers as [1,0]
+    def self.info_plist(app_name, vers, name)
+      return <<END
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<key>CFBundleGetInfoString</key>
+<string>#{app_name} #{vers.join(".")}</string>
+<key>CFBundleExecutable</key>
+<string>#{name}-launch</string>
+<key>CFBundleIdentifier</key>
+<string>org.hackety.#{name}</string>
+<key>CFBundleName</key>
+<string>#{app_name}</string>
+<key>CFBundleIconFile</key>
+<string>Shoes.icns</string>
+<key>CFBundleShortVersionString</key>
+<string>#{vers.join(".")}</string>
+<key>CFBundleInfoDictionaryVersion</key>
+<string>6.0</string>
+<key>CFBundlePackageType</key>
+<string>APPL</string>
+<key>IFMajorVersion</key>
+<integer>#{vers[0]}</integer>
+<key>IFMinorVersion</key>
+<integer>#{vers[1]}</integer>
+</dict>
+</plist>
+END
+    end
+
+    def version_plist(app_name, vers)
+      return <<END
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<key>BuildVersion</key>
+<string>1</string>
+<key>CFBundleVersion</key>
+<string>#{vers.join(".")}</string>
+<key>ProjectName</key>
+<string>#{app_name}</string>
+<key>SourceVersion</key>
+<string>#{Time.now.strftime("%Y%m%d")}</string>
+</dict>
+</plist>
+END
+    end
+
+    def app_launch(script)
+      return <<END
+#!/bin/bash
+SHOESPATH=/Applications/Shoes.app/Contents/MacOS
+APPPATH="${0%/*}"
+unset DYLD_LIBRARY_PATH
+cd "$APPPATH"
+echo "[Pango]" > /tmp/pangorc
+echo "ModuleFiles=$SHOESPATH/pango.modules" >> /tmp/pangorc
+if [ ! -d /Applications/Shoes.app ]
+  then ./cocoa-install
+    fi
+    open -a /Applications/Shoes.app "#{File.basename(script)}"
+    # DYLD_LIBRARY_PATH=$SHOESPATH PANGO_RC_FILE="$APPPATH/pangorc" $SHOESPATH/shoes-bin "#{File.basename(script)}"
+END
     end
   end
 

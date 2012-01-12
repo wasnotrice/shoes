@@ -333,7 +333,7 @@ END
               @exe = check
               para "Windows"
             end
-            @incWin = list_box :items => items, :width => 0.6, :height => 30, do
+            @incWin = list_box :items => items, :width => 0.6, :height => 30 do
               @downOpt = @incWin.text
               est_recount
             end

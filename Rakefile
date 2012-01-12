@@ -99,8 +99,9 @@ when /darwin/
   require_relative "make/darwin/homebrew"
 
   task :stub do
-    ENV['MACOSX_DEPLOYMENT_TARGET'] = '10.4'
-    sh "gcc -O -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch i386 -arch ppc -framework Cocoa -o stub platform/mac/stub.m -I."
+    ENV['MACOSX_DEPLOYMENT_TARGET'] = '10.6'
+    #sh "gcc -O -isysroot /Developer/SDKs/MacOSX10.4u.sdk -arch i386 -arch ppc -framework Cocoa -o stub platform/mac/stub.m -I."
+    sh "gcc -framework Cocoa -arch i386 -arch x86_64 -o stub platform/mac/stub.m -I."
   end
   NAMESPACE = :osx
 when /linux/

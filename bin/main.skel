@@ -53,7 +53,7 @@ main(argc, argv)
       SHOES_BUFSIZE,
       "begin;"
         "DIR = File.expand_path(File.dirname(%%q<%s>));"
-        "$:.replace([DIR+'/ruby/lib/'+PLATFORM, DIR+'/ruby/lib', DIR+'/lib', '.']);"
+        "$:.replace([DIR+'/ruby/lib/'+(SHOES_RUBY_ARCH || PLATFORM), DIR+'/ruby/lib', DIR+'/lib', '.']);"
         "require 'shoes/cache';"
         "DIR;"
       "rescue Object => e;"

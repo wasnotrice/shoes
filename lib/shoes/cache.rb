@@ -26,6 +26,7 @@ $:.unshift SITE_LIB_DIR
 $:.unshift GEM_DIR
 ENV['GEM_HOME'] = GEM_DIR
 
+require 'rbconfig'
 SHOES_RUBY_ARCH = RbConfig::CONFIG['arch']
 config = {
   'ruby_install_name' => "shoes --ruby",

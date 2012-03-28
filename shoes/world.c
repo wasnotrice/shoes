@@ -195,7 +195,7 @@ shoes_start(char *path, char *uri)
       "require 'shoes';"
       "DIR;"
     "rescue Object => e;"
-      "puts(e.message);"
+      "puts('Error starting Shoes: '+e.message);"
     "end",
     path);
 

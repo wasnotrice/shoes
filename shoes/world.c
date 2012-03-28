@@ -190,12 +190,20 @@ shoes_start(char *path, char *uri)
   int len = shoes_snprintf(bootup,
     SHOES_BUFSIZE,
     "begin;"
+      "puts 'LOADED FEATURES';"
+      "puts $LOADED_FEATURES.join(\"\n\");"
       "DIR = File.expand_path(File.dirname(%%q<%s>));"
+      "puts 'DIR: '+DIR;"
       "$:.replace([DIR+'/ruby/lib/'+(ENV['SHOES_RUBY_ARCH'] || RUBY_PLATFORM), DIR+'/ruby/lib', DIR+'/lib', '.']);"
+      "puts 'LOAD PATH';"
+      "puts $:.join(\"\n\");"
+      "puts 'requiring shoes';"
       "require 'shoes';"
+      "puts 'finished requiring shoes';"
       "DIR;"
     "rescue Object => e;"
       "puts('Error starting Shoes: '+e.message);"
+      "puts e.backtrace.join(\"\n\");"
     "end",
     path);
 

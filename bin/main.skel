@@ -57,7 +57,7 @@ main(argc, argv)
         "require 'shoes/cache';"
         "DIR;"
       "rescue Object => e;"
-        "puts(e.message);"
+        "puts('Error loading binary: '+e.message);"
       "end",
       path);
 

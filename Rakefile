@@ -172,6 +172,7 @@ def skel_replace(line)
       }
     end
   end
+  line.gsub! "%ARCH%", SHOES_RUBY_ARCH
   line
 end
 
